@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قوى الترابط بين الجزيئات - مختبر الكيمياء التفاعلي</title>
+    <!-- تحميل مكتبة Tailwind CSS للتصميم المتجاوب -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- تحميل خط Tajawal العربي المريح للقراءة -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Tajawal', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            900: '#0c4a6e',
+                        },
+                        secondary: {
+                            50: '#f0fdf4',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* تنسيقات مخصصة للحركات ثلاثية الأبعاد للبطاقات والتفاصيل الدقيقة */
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            overflow-x: hidden;
+        }
+
+        /* تأثير قلب البطاقات 3D */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+
+        /* إخفاء شريط التمرير مع إبقاء وظيفته في القوائم الأفقية */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* حركة نبض خفيفة للروابط الهيدروجينية */
+        @keyframes pulseDash {
+            to {
+                stroke-dashoffset: -20;
+            }
+        }
+        .h-bond-line {
+            stroke-dasharray: 5, 5;
+            animation: pulseDash 1.5s linear infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-50 text-slate-800 selection:bg-sky-200 selection:text-sky-900">
+
+    <!-- الشريط العلوي والتنقل -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 py-3">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                <!-- عنوان الدرس -->
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 to-emerald-500 flex items-center justify-center text-white font-extrabold text-xl shadow-md">
+                            ⚛️
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">الدرس الثاني • الكيمياء</span>
+                            <h1 class="text-lg md:text-xl font-extrabold text-slate-900 mt-0.5">قوى الترابط بين الجزيئات</h1>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- قائمة الأقسام التفاعلية -->
+                <nav class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 md:pb-0" id="main-nav">
+                    <button onclick="switchTab('lessons')" id="tab-lessons" class="nav-btn active px-3.5 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-all flex items-center gap-1.5 bg-sky-600 text-white shadow-sm">
+                        <span>📖</span> الشرح والمفاهيم
+                    </button>
+                    <button onclick="switchTab('simulations')" id="tab-simulations" class="nav-btn px-3.5 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-all flex items-center gap-1.5 text-slate-600 hover:bg-slate-100">
+                        <span>🔬</span> المختبر التفاعلي
+                    </button>
+                    <button onclick="switchTab('flashcards')" id="tab-flashcards" class="nav-btn px-3.5 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-all flex items-center gap-1.5 text-slate-600 hover:bg-slate-100">
+                        <span>🗂️</span> بطاقات المراجعة
+                    </button>
+                    <button onclick="switchTab('practice')" id="tab-practice" class="nav-btn px-3.5 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-all flex items-center gap-1.5 text-slate-600 hover:bg-slate-100">
+                        <span>🎯</span> تدريبات متدرجة
+                    </button>
+                    <button onclick="switchTab('exam')" id="tab-exam" class="nav-btn px-3.5 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-all flex items-center gap-1.5 text-slate-600 hover:bg-slate-100">
+                        <span>🏆</span> الاختبار النهائي
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="flex-grow max-w-6xl w-full mx-auto px-4 py-6 md:py-8">
+
+        <!-- ========================================== -->
+        <!-- القسم 1: الشرح المبسط والمفاهيم الأساسية -->
+        <!-- ========================================== -->
+        <section id="section-lessons" class="tab-section space-y-8 animate-fadeIn">
+            
+            <!-- بطاقة الفكرة الرئيسة ونتاجات التعلم -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 bg-gradient-to-br from-sky-900 to-slate-800 text-white rounded-3xl p-6 md:p-8 shadow-lg relative overflow-hidden">
+                    <div class="absolute -left-10 -bottom-10 w-44 h-44 bg-sky-500/20 rounded-full blur-2xl"></div>
+                    <div class="inline-flex items-center gap-2 bg-sky-500/20 border border-sky-400/30 text-sky-200 px-3 py-1 rounded-full text-xs font-bold mb-4">
+                        <span>💡</span> الفكرة الرئيسة للدرس
+                    </div>
+                    <p class="text-lg md:text-xl leading-relaxed font-medium text-slate-100">
+                        إن قوى التجاذب أو التنافر التي تربط بين الجسيمات المتجاورة (<span class="text-amber-300 font-bold">ذرات، جزيئات أو أيونات</span>) <span class="underline decoration-sky-400 decoration-2 underline-offset-4">ضعيفة</span> بالمقارنة مع قوى الترابط داخل الجزيء، وهي القوى التي تُبقي الجزيئات مرتبطة معاً.
+                    </p>
+                    
+                    <div class="mt-6 pt-5 border-t border-white/10">
+                        <h3 class="text-sm font-bold text-sky-300 mb-3">المفردات الأساسية في الدرس:</h3>
+                        <div class="flex flex-wrap gap-3">
+                            <div class="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/15 flex items-center gap-3">
+                                <span class="font-bold text-white">قوى فاندرفالز</span>
+                                <span class="text-xs text-sky-300 font-mono" dir="ltr">Van der Waals Force</span>
+                            </div>
+                            <div class="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/15 flex items-center gap-3">
+                                <span class="font-bold text-white">الرابطة الهيدروجينية</span>
+                                <span class="text-xs text-emerald-300 font-mono" dir="ltr">Hydrogen bonding</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- بطاقة نتاجات التعلم -->
+                <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-2 text-emerald-700 font-extrabold text-lg mb-4">
+                            <span class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center text-base">🎯</span>
+                            <h2>نتاجات التعلم</h2>
+                        </div>
+                        <p class="text-sm text-slate-500 mb-3">في نهاية هذا الدرس سأكون قادراً على أن:</p>
+                        <ul class="space-y-3 text-slate-700 font-medium text-sm md:text-base">
+                            <li class="flex items-start gap-2.5 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                                <span class="w-6 h-6 rounded-full bg-emerald-500 text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">1</span>
+                                <span>أفهم وجود قوى بين الجزيئات غير القطبية.</span>
+                            </li>
+                            <li class="flex items-start gap-2.5 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                                <span class="w-6 h-6 rounded-full bg-emerald-500 text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">2</span>
+                                <span>أعرف أن هذه القوى وقتية (آنية).</span>
+                            </li>
+                            <li class="flex items-start gap-2.5 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                                <span class="w-6 h-6 rounded-full bg-emerald-500 text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">3</span>
+                                <span>أعرف مفهوم الرابطة الهيدروجينية.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <button onclick="switchTab('simulations')" class="mt-5 w-full py-2.5 px-4 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+                        <span>جرب المختبر التفاعلي الآن</span>
+                        <span>←</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- المحور الأول: ما قوى فاندرفالز؟ -->
+            <div class="bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-sm space-y-6">
+                <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4">
+                    <div class="flex items-center gap-3">
+                        <span class="w-10 h-10 rounded-2xl bg-indigo-100 text-indigo-700 font-extrabold flex items-center justify-center text-lg">1</span>
+                        <div>
+                            <h2 class="text-xl md:text-2xl font-extrabold text-slate-900">ما قوى فاندرفالز؟</h2>
+                            <p class="text-xs md:text-sm text-slate-500">قوى فيزيائية وقتية بين الذرات أو الجزيئات التساهمية غير القطبية</p>
+                        </div>
+                    </div>
+                    <span class="text-xs font-bold bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-xl border border-indigo-100">نسبةً إلى العالم فاندرفالز</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4 text-slate-700 leading-relaxed">
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
+                            <h3 class="font-bold text-slate-900 mb-1.5 flex items-center gap-2">
+                                <span class="text-indigo-600">●</span> التعريف والطبيعة:
+                            </h3>
+                            <p class="text-sm md:text-base">
+                                هي قوى توجد بين الذرات أو الجزيئات التساهمية <strong>غير القطبية</strong> مثل: 
+                                <span dir="ltr" class="inline-block bg-white px-2 py-0.5 rounded border border-slate-200 font-mono text-xs font-bold text-indigo-700 mx-1">Ne , H₂ , I₂ , Br₂ , C₆H₁₂</span>.
+                                وهي <strong>قوى فيزيائية وليست روابط كيميائية</strong>، وتكون ضعيفة عند مقارنتها بالروابط الأيونية أو التساهمية بين الذرات.
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-indigo-50/60 border border-indigo-100">
+                            <h3 class="font-bold text-indigo-950 mb-1.5 flex items-center gap-2">
+                                <span class="text-indigo-600">●</span> كيف تنشأ قوى فاندرفالز؟
+                            </h3>
+                            <p class="text-sm md:text-base">
+                                تنشأ نتيجة تأثر دوران الإلكترونات في ذرة أو جزيء ما بدوران الإلكترونات في ذرة أو جزيء مجاور لها، بطريقة تؤدي إلى <strong>ابتعاد الإلكترونات لإحدى الذرتين عن الجهة التي يوجد فيها إلكترونات الذرة الأخرى</strong>. ونتيجة لهذا الابتعاد والحركة العشوائية للإلكترونات يتولد جزيئان أو ذرتان <strong>مستقطبتان بشكل آني (لحظي)</strong>، مما يؤدي إلى تجاذب ضعيف يمثل قوى فاندرفالز.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- العلاقة مع الحجم الذري وعدد الإلكترونات -->
+                        <div class="p-5 rounded-2xl bg-amber-50/70 border border-amber-200/80">
+                            <h3 class="font-bold text-amber-950 mb-2 flex items-center gap-2">
+                                <span>⚖️</span> علاقة قوة فاندرفالز بحجم الذرة وعدد الإلكترونات:
+                            </h3>
+                            <p class="text-sm text-slate-700 mb-3">
+                                <strong>تزداد قوتها بازدياد حجم الذرة أو الجزيء</strong> (لأن امتلاك عدد أكبر من الإلكترونات يزيد فرصة الاستقطاب الآني)، والدليل على ذلك اختلاف الحالة الفيزيائية للهالوجينات:
+                            </p>
+                            <div class="grid grid-cols-3 gap-2 text-center">
+                                <div class="bg-white p-3 rounded-xl border border-amber-200 shadow-xs">
+                                    <div class="text-lg font-extrabold text-sky-600">الفلور</div>
+                                    <div class="text-xs font-bold bg-sky-100 text-sky-800 rounded-full px-2 py-0.5 my-1 inline-block">غاز</div>
+                                    <p class="text-[11px] text-slate-500">حجم الذرة صغير وعدد الإلكترونات أقل</p>
+                                </div>
+                                <div class="bg-white p-3 rounded-xl border border-amber-200 shadow-xs">
+                                    <div class="text-lg font-extrabold text-amber-600">البروم</div>
+                                    <div class="text-xs font-bold bg-amber-100 text-amber-800 rounded-full px-2 py-0.5 my-1 inline-block">سائل</div>
+                                    <p class="text-[11px] text-slate-500">حجم وإلكترونات متوسطة</p>
+                                </div>
+                                <div class="bg-white p-3 rounded-xl border border-amber-200 shadow-xs">
+                                    <div class="text-lg font-extrabold text-purple-700">اليود</div>
+                                    <div class="text-xs font-bold bg-purple-100 text-purple-800 rounded-full px-2 py-0.5 my-1 inline-block">صلب</div>
+                                    <p class="text-[11px] text-slate-500">حجم كبير وعدد إلكترونات أكبر</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- مقارنة الحالة الصلبة والسائلة -->
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-4">
+                            <div class="text-sm text-slate-700">
+                                <span class="font-bold text-slate-900 block mb-1">ترتيب الأقطاب الآنية حسب الحالة:</span>
+                                <ul class="text-xs space-y-1 text-slate-600 list-disc list-inside">
+                                    <li><strong>في الحالة الصلبة:</strong> ترتيب منتظم للطرف السالب والموجب للذرات في الجزيء.</li>
+                                    <li><strong>في الحالة السائلة:</strong> ترتيب عشوائي للطرف السالب والموجب للذرات في الجزيء.</li>
+                                </ul>
+                            </div>
+                            <div class="shrink-0 bg-emerald-50 border border-emerald-200 p-3 rounded-xl text-center max-w-[140px]">
+                                <span class="text-xl block">🦎🏢</span>
+                                <span class="text-[11px] font-bold text-emerald-800 block mt-1">تطبيق حياتي:</span>
+                                <span class="text-[10px] text-emerald-700 leading-tight block">تسلق المباني الزجاجية يرتبط بقوى فاندرفالز!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- المحور الثاني: ما الرابطة الهيدروجينية؟ -->
+            <div class="bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-sm space-y-6">
+                <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4">
+                    <div class="flex items-center gap-3">
+                        <span class="w-10 h-10 rounded-2xl bg-sky-100 text-sky-700 font-extrabold flex items-center justify-center text-lg">2</span>
+                        <div>
+                            <h2 class="text-xl md:text-2xl font-extrabold text-slate-900">ما الرابطة الهيدروجينية؟</h2>
+                            <p class="text-xs md:text-sm text-slate-500">قوة جذب فيزيائية بين الجزيئات القطبية تفسر خواص الماء المميزة</p>
+                        </div>
+                    </div>
+                    <span class="text-xs font-bold bg-sky-50 text-sky-700 px-3 py-1.5 rounded-xl border border-sky-100">تُمثل بشكل نقاط (....)</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4 text-slate-700 leading-relaxed">
+                        <p class="text-sm md:text-base">
+                            الروابط التي تربط ذرتي الهيدروجين مع الأوكسجين <strong>داخل جزيء الماء</strong> هي روابط <strong>تساهمية</strong>. لكن جزيء الماء نفسه يُعد <strong>جزيئاً قطبياً (يشبه المغناطيس)</strong>؛ حيث تمثل ذرتا الهيدروجين القطب الموجب (<span dir="ltr" class="font-mono font-bold text-sky-600">δ⁺</span>) وتمثل ذرة الأوكسجين القطب السالب (<span dir="ltr" class="font-mono font-bold text-rose-600">δ⁻</span>).
+                        </p>
+
+                        <div class="p-4 rounded-2xl bg-sky-50 border border-sky-200/80">
+                            <h3 class="font-bold text-sky-950 mb-1.5">تعريف الرابطة الهيدروجينية:</h3>
+                            <p class="text-sm md:text-base text-slate-800">
+                                هي <strong>قوة ترابط بين جزيء يحتوي على ذرة هيدروجين وزوج من الإلكترونات غير مرتبط بجزيء آخر أو في نفس الجزيء</strong>. وهي <strong>قوة جذب فيزيائية وليست رابطة كيميائية</strong>، وتُمثل بشكل نقاط (<span class="font-mono font-bold">....</span>) لتدل على أن الارتباط ضعيف، إلا أنها تسبب تغيرات كبيرة في الخواص الفيزيائية للمركبات.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                            <h3 class="font-bold text-slate-900 mb-2">شروط تكون الرابطة الهيدروجينية وأمثلتها:</h3>
+                            <p class="text-sm text-slate-700 mb-3">
+                                تتكون بين ذرة الهيدروجين وذرات العناصر ذات القدرة العالية على سحب زوج إلكتروني قريباً منها مثل:
+                                <span dir="ltr" class="inline-block bg-white px-2.5 py-0.5 rounded-lg border border-slate-300 font-mono font-bold text-rose-600 mx-1">( O , N , F )</span>
+                                في جزيء آخر، فتظهر عليها شحنة جزئية سالبة (<span dir="ltr" class="font-mono font-bold">δ⁻</span>) وتظهر على الهيدروجين شحنة جزئية موجبة (<span dir="ltr" class="font-mono font-bold">δ⁺</span>).
+                            </p>
+                            <div class="flex flex-wrap items-center gap-2 text-xs">
+                                <span class="font-bold text-slate-600">أمثلة لجزيئات تظهر فيها:</span>
+                                <span class="bg-sky-100 text-sky-800 font-bold px-2.5 py-1 rounded-lg">جزيء الماء (H₂O)</span>
+                                <span class="bg-sky-100 text-sky-800 font-bold px-2.5 py-1 rounded-lg">الأمونيا</span>
+                                <span class="bg-sky-100 text-sky-800 font-bold px-2.5 py-1 rounded-lg">الكحول</span>
+                                <span class="bg-sky-100 text-sky-800 font-bold px-2.5 py-1 rounded-lg">فلوريد الهيدروجين (HF)</span>
+                            </div>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-rose-50/70 border border-rose-200">
+                            <h3 class="font-bold text-rose-950 text-sm mb-1 flex items-center gap-2">
+                                <span>🌡️</span> أثرها على درجة الغليان والذوبان:
+                            </h3>
+                            <p class="text-xs md:text-sm text-slate-700">
+                                بسبب الرابطة الهيدروجينية يُعزى سبب <strong>ارتفاع درجة غليان وذوبان الماء</strong> عن بقية المواد التي لا تحتوي على الرابطة الهيدروجينية، لأننا نحتاج للتغلب على كل من قوى فاندرفالز والرابطة الهيدروجينية للفصل بين الجزيئات.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- المحور الثالث: شذوذ الماء والرابطة الهيدروجينية -->
+            <div class="bg-gradient-to-br from-cyan-50 to-blue-50 rounded-3xl p-6 md:p-8 border border-cyan-200 shadow-sm space-y-5">
+                <div class="flex items-center gap-3">
+                    <span class="w-10 h-10 rounded-2xl bg-cyan-600 text-white font-extrabold flex items-center justify-center text-lg">3</span>
+                    <div>
+                        <h2 class="text-xl md:text-2xl font-extrabold text-slate-900">شذوذ الماء والرابطة الهيدروجينية</h2>
+                        <p class="text-xs md:text-sm text-cyan-800">لماذا يزداد حجم الماء وتقل كثافته عندما يتجمد؟</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm md:text-base text-slate-700 leading-relaxed">
+                    <div class="bg-white/90 p-5 rounded-2xl border border-cyan-100 space-y-3">
+                        <h3 class="font-bold text-slate-900 text-base">الظاهرة وتفسيرها العلمي:</h3>
+                        <p>
+                            السوائل بشكل عام <strong>يقل حجمها وتزداد كثافتها</strong> عندما تتجمد، في حين أن <strong>الماء يزداد حجمه وتقل كثافته</strong> عندما يتجمد!
+                        </p>
+                        <p>
+                            <strong>التفسير:</strong> جزيئات الماء في حركة دائمة تعتمد سرعتها على حالة الماء (غازية، سائلة، صلبة). عند انخفاض درجة الحرارة إلى ما تحت الصفر المئوي يتحول الماء إلى جليد، وبسبب <strong>التنافر الحاصل بين الشحنات المتماثلة</strong> لا تستطيع جزيئات الماء القطبية أن تتقارب جداً من بعضها، <strong>فيقل عدد الجزيئات المترابطة بالروابط الهيدروجينية ويزيد الفراغ فيما بينها</strong> مؤدياً إلى زيادة الحجم مقارنة بحجم الماء السائل.
+                        </p>
+                    </div>
+
+                    <div class="bg-white/90 p-5 rounded-2xl border border-cyan-100 flex flex-col justify-between space-y-3">
+                        <div>
+                            <h3 class="font-bold text-emerald-800 text-base flex items-center gap-2 mb-2">
+                                <span>🐟</span> نعمة عظيمة لحفظ الحياة المائية:
+                            </h3>
+                            <p>
+                                تعد هذه الخاصية نعمة عظيمة من نعم الباريء على الكون؛ فلو خضع الماء للقواعد العامة شأنه شأن السوائل الأخرى لازدادت كثافة الثلج المتكون على السطح عن بقية الماء وهبط إلى القاع، معرضاً سطح الماء الذي تحته إلى درجة حرارة منخفضة فتتجمد هي الأخرى وتهبط إلى القاع، مما يعرض <strong>حياة الكائنات المائية إلى الاندثار</strong>.
+                            </p>
+                        </div>
+                        <div class="bg-cyan-50 p-3 rounded-xl border border-cyan-200 text-xs text-cyan-900 font-bold text-center">
+                            طفو الجليد فوق الماء يعزل الماء تحته ويحافظ على حياة الكائنات المائية!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- القسم 2: المختبر التفاعلي والمحاكاة -->
+        <!-- ========================================== -->
+        <section id="section-simulations" class="tab-section hidden space-y-8">
+            <div class="text-center max-w-2xl mx-auto">
+                <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900">المختبر التفاعلي للمفاهيم</h2>
+                <p class="text-slate-600 text-sm md:text-base mt-1">استكشف بنفسك كيف تنشأ قوى فاندرفالز، وكيف ترتبط جزيئات الماء، ولماذا يطفو الجليد!</p>
+            </div>
+
+            <!-- محاكاة 1: قوى فاندرفالز والاستقطاب الآني -->
+            <div class="bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-sm">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">محاكاة 1</span>
+                        <h3 class="text-xl font-extrabold text-slate-900 mt-1">تولّد الاستقطاب الآني (قوى فاندرفالز)</h3>
+                        <p class="text-sm text-slate-500">حرّك شريط اقتراب الذرتين أو غيّر حجم الذرة لملاحظة تأثير دوران الإلكترونات وقوة التجاذب</p>
+                    </div>
+                    <!-- اختيار حجم الذرة (فلور، بروم، يود) -->
+                    <div class="flex items-center gap-2 bg-slate-100 p-1.5 rounded-2xl">
+                        <button onclick="setVdwElement('F')" id="btn-vdw-F" class="vdw-el-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-indigo-700 shadow-xs transition">الفلور (غاز)</button>
+                        <button onclick="setVdwElement('Br')" id="btn-vdw-Br" class="vdw-el-btn px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-900 transition">البروم (سائل)</button>
+                        <button onclick="setVdwElement('I')" id="btn-vdw-I" class="vdw-el-btn px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-900 transition">اليود (صلب)</button>
+                    </div>
+                </div>
+
+                <!-- لوحة الرسم التفاعلية لفاندرفالز -->
+                <div class="bg-slate-900 rounded-2xl p-4 md:p-6 text-white relative overflow-hidden">
+                    <canvas id="vdwCanvas" class="w-full h-56 md:h-64 rounded-xl block"></canvas>
+                    
+                    <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 items-center bg-slate-800/80 p-4 rounded-xl border border-slate-700">
+                        <div>
+                            <label for="atomDistance" class="flex justify-between text-xs font-bold text-slate-300 mb-2">
+                                <span>المسافة بين الذرتين غير القطبيتين:</span>
+                                <span id="distanceLabel" class="text-sky-400">متباعدتان (لا يوجد استقطاب)</span>
+                            </label>
+                            <input type="range" id="atomDistance" min="15" max="100" value="85" class="w-full accent-sky-400 cursor-pointer h-2 bg-slate-700 rounded-lg">
+                        </div>
+                        <div id="vdwExplanationBox" class="text-xs md:text-sm text-slate-200 bg-slate-900/70 p-3 rounded-xl border border-slate-700/80">
+                            عندما تكون الذرتان متباعدتين، تتوزع الإلكترونات بانتظام ولا يوجد استقطاب. قرّب الذرتين لملاحظة تنافر الإلكترونات وتكوّن الأقطاب اللحظية!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- محاكاة 2: الرابطة الهيدروجينية وشذوذ الماء (ماء سائل مقابل جليد) -->
+            <div class="bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-sm">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <span class="text-xs font-bold text-sky-600 bg-sky-50 px-3 py-1 rounded-full">محاكاة 2</span>
+                        <h3 class="text-xl font-extrabold text-slate-900 mt-1">الرابطة الهيدروجينية وشذوذ الماء (السائل مقابل الجليد)</h3>
+                        <p class="text-sm text-slate-500">قارن بين ترتيب جزيئات الماء القطبية، الفراغات البينية، والحجم والكثافة في الحالتين</p>
+                    </div>
+                    <div class="flex items-center gap-2 bg-slate-100 p-1.5 rounded-2xl">
+                        <button onclick="setWaterState('liquid')" id="btn-water-liquid" class="water-state-btn px-4 py-2 rounded-xl text-xs md:text-sm font-bold bg-sky-600 text-white shadow-xs transition flex items-center gap-1.5">
+                            <span>💧</span> ماء سائل (فوق 0°م)
+                        </button>
+                        <button onclick="setWaterState('ice')" id="btn-water-ice" class="water-state-btn px-4 py-2 rounded-xl text-xs md:text-sm font-bold text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5">
+                            <span>🧊</span> جليد صلب (تحت 0°م)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+                    <div class="lg:col-span-2 bg-gradient-to-b from-sky-50 to-cyan-50 rounded-2xl p-4 border border-sky-200">
+                        <canvas id="waterCanvas" class="w-full h-64 md:h-72 rounded-xl block"></canvas>
+                        <div class="flex flex-wrap justify-center gap-4 mt-3 text-xs font-bold text-slate-700">
+                            <span class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded-full bg-rose-500 inline-block"></span> ذرة أوكسجين (δ⁻)</span>
+                            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-sky-500 inline-block"></span> ذرة هيدروجين (δ⁺)</span>
+                            <span class="flex items-center gap-1.5"><span class="w-6 border-b-2 border-dashed border-slate-700 inline-block"></span> رابطة هيدروجينية (....)</span>
+                        </div>
+                    </div>
+
+                    <div id="waterInfoPanel" class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4">
+                        <div class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-sky-100 text-sky-800" id="waterStateBadge">الحالة السائلة للماء</div>
+                        <h4 class="font-extrabold text-slate-900 text-lg" id="waterStateTitle">حركة مستمرة وتقارب أكبر</h4>
+                        <p class="text-sm text-slate-600 leading-relaxed" id="waterStateDesc">
+                            في الحالة السائلة تكون جزيئات الماء في حركة مستمرة، وعدد الجزيئات المترابطة بالروابط الهيدروجينية أكبر والفراغات البينية أقل، لذا يكون حجم الماء السائل أقل وكثافته أكبر من الجليد.
+                        </p>
+                        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200 text-center">
+                            <div class="bg-white p-2.5 rounded-xl border border-slate-200">
+                                <span class="text-[11px] text-slate-500 block">الحجم</span>
+                                <span id="waterVolumeStat" class="font-extrabold text-sky-700 text-sm">أقل حجماً</span>
+                            </div>
+                            <div class="bg-white p-2.5 rounded-xl border border-slate-200">
+                                <span class="text-[11px] text-slate-500 block">الكثافة</span>
+                                <span id="waterDensityStat" class="font-extrabold text-emerald-700 text-sm">أعلى كثافة</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- القسم 3: بطاقات المراجعة التفاعلية -->
+        <!-- ========================================== -->
+        <section id="section-flashcards" class="tab-section hidden space-y-6">
+            <div class="text-center max-w-2xl mx-auto">
+                <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900">بطاقات المراجعة السريعة</h2>
+                <p class="text-slate-600 text-sm md:text-base mt-1">انقر على أي بطاقة لقلبها واكتشاف الإجابة النموذجية المستندة إلى الدرس</p>
+            </div>
+
+            <!-- أزرار تصفية البطاقات -->
+            <div class="flex flex-wrap justify-center gap-2">
+                <button onclick="filterCards('all')" class="fc-filter active px-4 py-1.5 rounded-full text-xs font-bold bg-slate-800 text-white transition">الكل (9 بطاقات)</button>
+                <button onclick="filterCards('vdw')" class="fc-filter px-4 py-1.5 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 transition">قوى فاندرفالز</button>
+                <button onclick="filterCards('hbond')" class="fc-filter px-4 py-1.5 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 transition">الرابطة الهيدروجينية</button>
+                <button onclick="filterCards('water')" class="fc-filter px-4 py-1.5 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 transition">شذوذ الماء وأسئلة الدرس</button>
+            </div>
+
+            <!-- شبكة البطاقات -->
+            <div id="flashcardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- يتم توليد البطاقات عبر JavaScript -->
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- القسم 4: الأسئلة متدرجة الصعوبة -->
+        <!-- ========================================== -->
+        <section id="section-practice" class="tab-section hidden space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-slate-900">تدريبات متدرجة الصعوبة</h2>
+                    <p class="text-sm text-slate-600 mt-1">اختر مستوى الصعوبة وتدرب مع تغذية راجعة فورية تشرح سبب الإجابة الصحيحة أو الخطأ</p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="selectDifficulty('easy')" id="diff-easy" class="diff-btn px-4 py-2 rounded-xl text-xs md:text-sm font-bold bg-emerald-600 text-white shadow-xs transition">
+                        🌱 المستوى 1: أساسي
+                    </button>
+                    <button onclick="selectDifficulty('medium')" id="diff-medium" class="diff-btn px-4 py-2 rounded-xl text-xs md:text-sm font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+                        🌿 المستوى 2: متوسط
+                    </button>
+                    <button onclick="selectDifficulty('hard')" id="diff-hard" class="diff-btn px-4 py-2 rounded-xl text-xs md:text-sm font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+                        🌳 المستوى 3: التفكير الناقد
+                    </button>
+                </div>
+            </div>
+
+            <div id="practiceContainer" class="space-y-4">
+                <!-- يتم تحميل أسئلة المستوى المحدد هنا -->
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- القسم 5: الاختبار النهائي والتشخيص -->
+        <!-- ========================================== -->
+        <section id="section-exam" class="tab-section hidden space-y-6">
+            <div class="bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-sm">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-5 mb-6">
+                    <div>
+                        <span class="text-xs font-bold text-amber-700 bg-amber-100 px-3 py-1 rounded-full">تقييم شامل للدرس</span>
+                        <h2 class="text-2xl font-extrabold text-slate-900 mt-1">الاختبار النهائي: قوى الترابط بين الجزيئات</h2>
+                        <p class="text-sm text-slate-500">أجب عن جميع الأسئلة (9 أسئلة تغطي كافة محاور الدرس) للحصول على نتيجتك وخطة المراجعة</p>
+                    </div>
+                    <button onclick="resetExam()" class="self-start md:self-auto px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+                        🔄 إعادة الاختبار
+                    </button>
+                </div>
+
+                <!-- تنبيه في حال وجود أسئلة غير مجابة -->
+                <div id="examWarning" class="hidden mb-6 p-4 rounded-2xl bg-amber-50 border border-amber-300 text-amber-900 text-sm font-bold flex items-center gap-2">
+                    <span>⚠️</span>
+                    <span>يرجى الإجابة عن جميع الأسئلة قبل تسليم الاختبار النهائي.</span>
+                </div>
+
+                <!-- قائمة أسئلة الاختبار -->
+                <div id="examQuestionsContainer" class="space-y-6">
+                    <!-- يتم توليدها بواسطة JS -->
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-slate-200 flex justify-center">
+                    <button onclick="submitExam()" id="submitExamBtn" class="px-8 py-3.5 rounded-2xl bg-gradient-to-l from-sky-600 to-emerald-600 hover:from-sky-700 hover:to-emerald-700 text-white font-extrabold text-base shadow-md transition transform hover:-translate-y-0.5">
+                        تسليم الاختبار وعرض النتيجة والتشخيص 📊
+                    </button>
+                </div>
+
+                <!-- لوحة النتائج والتشخيص -->
+                <div id="examResultPanel" class="hidden mt-8 p-6 md:p-8 rounded-3xl bg-slate-900 text-white space-y-6">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-6 border-b border-slate-700 pb-6">
+                        <div class="text-center md:text-right">
+                            <span class="text-xs font-bold text-sky-400 uppercase tracking-wider">تقرير الأداء النهائي</span>
+                            <h3 id="resultGradeTitle" class="text-2xl md:text-3xl font-extrabold mt-1">أحسنت! نتيجة رائعة</h3>
+                            <p id="resultSummaryText" class="text-slate-300 text-sm mt-1">لقد أتقنت مفاهيم قوى الترابط بين الجزيئات.</p>
+                        </div>
+                        <div class="bg-slate-800 border border-slate-700 px-6 py-4 rounded-2xl text-center shrink-0">
+                            <span class="text-xs text-slate-400 block">درجتك النهائية</span>
+                            <span id="resultScoreDisplay" class="text-3xl md:text-4xl font-extrabold text-emerald-400">9 / 9</span>
+                        </div>
+                    </div>
+
+                    <!-- تحليل المواضيع التي تحتاج مراجعة -->
+                    <div>
+                        <h4 class="font-bold text-base text-sky-300 mb-3 flex items-center gap-2">
+                            <span>🧭</span> التشخيص والمواضيع التي تحتاج لمراجعتها:
+                        </h4>
+                        <div id="topicsDiagnosisContainer" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <!-- يتم تعبئتها ديناميكياً حسب إجابات الطالب -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- تذييل الصفحة -->
+    <footer class="bg-white border-t border-slate-200 py-5 mt-10">
+        <div class="max-w-6xl mx-auto px-4 text-center text-xs text-slate-500">
+            مادة تعليمية تفاعلية مبنية حصرياً على محتوى درس <strong>"قوى الترابط بين الجزيئات"</strong> (الصفحات 29 - 31).
+        </div>
+    </footer>
+
+    <!-- السكربت التفاعلي الشامل -->
+    <script>
+        // ==========================================
+        // 1. إدارة التنقل بين التبويبات
+        // ==========================================
+        function switchTab(tabId) {
+            // إخفاء جميع الأقسام
+            document.querySelectorAll('.tab-section').forEach(sec => sec.classList.add('hidden'));
+            // إظهار القسم المطلوب
+            document.getElementById('section-' + tabId).classList.remove('hidden');
+
+            // تحديث حالة الأزرار
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-sky-600', 'text-white', 'shadow-sm');
+                btn.classList.add('text-slate-600', 'hover:bg-slate-100');
+            });
+            const activeBtn = document.getElementById('tab-' + tabId);
+            activeBtn.classList.remove('text-slate-600', 'hover:bg-slate-100');
+            activeBtn.classList.add('bg-sky-600', 'text-white', 'shadow-sm');
+
+            // إعادة ضبط أبعاد الكانفاس عند فتح المختبر التفاعلي
+            if (tabId === 'simulations') {
+                setTimeout(() => {
+                    resizeCanvases();
+                }, 50);
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ==========================================
+        // 2. المختبر التفاعلي (Canvas Animations)
+        // ==========================================
+        let currentVdwElement = 'F'; // F, Br, I
+        let currentWaterState = 'liquid'; // liquid, ice
+        let animTime = 0;
+
+        const vdwConfigs = {
+            F: { name: 'الفلور (غاز)', radius: 28, electrons: 4, strength: 'ضعيفة جداً (حجم الذرة صغير وعدد الإلكترونات أقل)' },
+            Br: { name: 'البروم (سائل)', radius: 38, electrons: 7, strength: 'متوسطة (حجم الذرة وعدد الإلكترونات أكبر من الفلور)' },
+            I: { name: 'اليود (صلب)', radius: 48, electrons: 11, strength: 'أقوى نسبياً (حجم الذرة كبير وعدد الإلكترونات كبير)' }
+        };
+
+        function setVdwElement(el) {
+            currentVdwElement = el;
+            document.querySelectorAll('.vdw-el-btn').forEach(b => {
+                b.classList.remove('bg-white', 'text-indigo-700', 'shadow-xs');
+                b.classList.add('text-slate-600');
+            });
+            const btn = document.getElementById('btn-vdw-' + el);
+            btn.classList.remove('text-slate-600');
+            btn.classList.add('bg-white', 'text-indigo-700', 'shadow-xs');
+            updateVdwText();
+        }
+
+        function updateVdwText() {
+            const dist = parseInt(document.getElementById('atomDistance').value);
+            const cfg = vdwConfigs[currentVdwElement];
+            const distLabel = document.getElementById('distanceLabel');
+            const expBox = document.getElementById('vdwExplanationBox');
+
+            if (dist > 60) {
+                distLabel.textContent = 'متباعدتان (توزيع منتظم)';
+                distLabel.className = 'text-slate-400';
+                expBox.innerHTML = `<strong>${cfg.name}:</strong> الذرتان غير القطبيتان متباعدتان، فتدور الإلكترونات بانتظام حول النواة دون استقطاب. <span class="text-amber-300">قرّب الذرتين!</span>`;
+            } else {
+                distLabel.textContent = 'متقاربتان (استقطاب آني نشط!)';
+                distLabel.className = 'text-emerald-400';
+                expBox.innerHTML = `<strong>تولدت قوى فاندرفالز!</strong> تبتعد إلكترونات الذرة الأولى عن جهة وجود إلكترونات الذرة المجاورة، فيتولد قطب سالب لحظي (<span dir="ltr">δ⁻</span>) وقطب موجب لحظي (<span dir="ltr">δ⁺</span>) ويحدث تجاذب ضعيف. قوة التجاذب هنا: <span class="text-sky-300">${cfg.strength}</span>.`;
+            }
+        }
+
+        document.getElementById('atomDistance').addEventListener('input', updateVdwText);
+
+        function setWaterState(state) {
+            currentWaterState = state;
+            document.querySelectorAll('.water-state-btn').forEach(b => {
+                b.classList.remove('bg-sky-600', 'text-white', 'shadow-xs');
+                b.classList.add('text-slate-600');
+            });
+            const activeBtn = document.getElementById('btn-water-' + state);
+            activeBtn.classList.remove('text-slate-600');
+            activeBtn.classList.add('bg-sky-600', 'text-white', 'shadow-xs');
+
+            const badge = document.getElementById('waterStateBadge');
+            const title = document.getElementById('waterStateTitle');
+            const desc = document.getElementById('waterStateDesc');
+            const vol = document.getElementById('waterVolumeStat');
+            const den = document.getElementById('waterDensityStat');
+
+            if (state === 'liquid') {
+                badge.textContent = 'الحالة السائلة للماء';
+                badge.className = 'inline-block px-3 py-1 rounded-full text-xs font-bold bg-sky-100 text-sky-800';
+                title.textContent = 'حركة دائمة وتقارب أكبر';
+                desc.textContent = 'في الحالة السائلة تكون جزيئات الماء في حركة مستمرة، ويكون عدد الجزيئات المترابطة بالروابط الهيدروجينية أكبر والفراغات البينية أقل مقارنة بالجليد، لذا يكون حجم الماء السائل أقل وكثافته أكبر.';
+                vol.textContent = 'أقل حجماً';
+                vol.className = 'font-extrabold text-sky-700 text-sm';
+                den.textContent = 'أعلى كثافة';
+                den.className = 'font-extrabold text-emerald-700 text-sm';
+            } else {
+                badge.textContent = 'حالة الجليد (تحت الصفر المئوي)';
+                badge.className = 'inline-block px-3 py-1 rounded-full text-xs font-bold bg-cyan-100 text-cyan-900';
+                title.textContent = 'تباعد بسبب التنافر وزيادة الفراغ';
+                desc.textContent = 'عند انخفاض درجة الحرارة إلى ما تحت الصفر المئوي، وبسبب التنافر بين الشحنات المتماثلة، لا تستطيع جزيئات الماء القطبية أن تتقارب جداً، فيقل عدد الجزيئات المترابطة بالروابط الهيدروجينية ويزيد الفراغ فيما بينها، مما يزيد الحجم ويقلل الكثافة فيطفو الجليد!';
+                vol.textContent = 'يزداد الحجم';
+                vol.className = 'font-extrabold text-amber-600 text-sm';
+                den.textContent = 'تقل الكثافة (يطفو)';
+                den.className = 'font-extrabold text-cyan-700 text-sm';
+            }
+        }
+
+        function resizeCanvases() {
+            const vdwC = document.getElementById('vdwCanvas');
+            const waterC = document.getElementById('waterCanvas');
+            if (vdwC && vdwC.parentElement) {
+                vdwC.width = vdwC.clientWidth;
+                vdwC.height = vdwC.clientHeight;
+            }
+            if (waterC && waterC.parentElement) {
+                waterC.width = waterC.clientWidth;
+                waterC.height = waterC.clientHeight;
+            }
+        }
+
+        window.addEventListener('resize', resizeCanvases);
+
+        function drawSimulations() {
+            animTime += 0.03;
+
+            // --- رسم محاكاة 1: قوى فاندرفالز ---
+            const vdwC = document.getElementById('vdwCanvas');
+            if (vdwC && vdwC.width > 0) {
+                const ctx = vdwC.getContext('2d');
+                const w = vdwC.width;
+                const h = vdwC.height;
+                ctx.clearRect(0, 0, w, h);
+
+                const distSlider = parseInt(document.getElementById('atomDistance').value);
+                const cfg = vdwConfigs[currentVdwElement];
+                const isPolarized = distSlider <= 60;
+                const polarizationFactor = isPolarized ? (60 - distSlider) / 45 : 0;
+
+                const centerY = h / 2;
+                const maxOffset = Math.min(w * 0.28, 180);
+                const minOffset = cfg.radius + 22;
+                const offset = minOffset + ((distSlider - 15) / 85) * (maxOffset - minOffset);
+
+                const atom1X = w / 2 - offset;
+                const atom2X = w / 2 + offset;
+
+                // رسم خط التجاذب الآني بين القطبين المتعاكسين
+                if (isPolarized) {
+                    ctx.save();
+                    ctx.strokeStyle = `rgba(56, 189, 248, ${0.4 + polarizationFactor * 0.6})`;
+                    ctx.lineWidth = 2 + polarizationFactor * 3;
+                    ctx.setLineDash([6, 6]);
+                    ctx.lineDashOffset = -animTime * 15;
+                    ctx.beginPath();
+                    ctx.moveTo(atom1X + cfg.radius, centerY);
+                    ctx.lineTo(atom2X - cfg.radius, centerY);
+                    ctx.stroke();
+                    ctx.restore();
+
+                    // نص قوى فاندرفالز في المنتصف
+                    ctx.fillStyle = '#38bdf8';
+                    ctx.font = 'bold 12px Tajawal';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('قوى فاندرفالز (تجاذب آني)', w / 2, centerY - cfg.radius - 16);
+                }
+
+                // دالة رسم كل ذرة وسحابتها الإلكترونية
+                function drawAtom(cx, shiftDirection) {
+                    const cloudShift = shiftDirection * polarizationFactor * 14;
+                    
+                    // السحابة الإلكترونية (تُزاح عند الاستقطاب الآني)
+                    const grad = ctx.createRadialGradient(
+                        cx + cloudShift, centerY, 5,
+                        cx + cloudShift, centerY, cfg.radius + 10
+                    );
+                    grad.addColorStop(0, 'rgba(99, 102, 241, 0.45)');
+                    grad.addColorStop(1, 'rgba(99, 102, 241, 0.05)');
+
+                    ctx.beginPath();
+                    ctx.ellipse(cx + cloudShift, centerY, cfg.radius + polarizationFactor * 6, cfg.radius, 0, 0, Math.PI * 2);
+                    ctx.fillStyle = grad;
+                    ctx.fill();
+                    ctx.strokeStyle = isPolarized ? 'rgba(129, 140, 248, 0.8)' : 'rgba(148, 163, 184, 0.4)';
+                    ctx.lineWidth = 1.5;
+                    ctx.stroke();
+
+                    // النواة الموجبة في المركز
+                    ctx.beginPath();
+                    ctx.arc(cx, centerY, 10, 0, Math.PI * 2);
+                    ctx.fillStyle = '#f43f5e';
+                    ctx.fill();
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = 'bold 12px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('+', cx, centerY);
+
+                    // الإلكترونات المتحركة
+                    for (let i = 0; i < cfg.electrons; i++) {
+                        const angle = animTime * (1.2 + (i % 3) * 0.2) + (i * Math.PI * 2) / cfg.electrons;
+                        const ex = cx + cloudShift + Math.cos(angle) * (cfg.radius * 0.72);
+                        const ey = centerY + Math.sin(angle) * (cfg.radius * 0.72);
+                        ctx.beginPath();
+                        ctx.arc(ex, ey, 3, 0, Math.PI * 2);
+                        ctx.fillStyle = '#38bdf8';
+                        ctx.fill();
+                    }
+
+                    // إظهار الشحنات الجزئية اللحظية عند الاقتراب
+                    if (isPolarized) {
+                        ctx.font = 'bold 13px sans-serif';
+                        if (shiftDirection < 0) {
+                            // الإلكترونات أُزيحت لليسار -> اليسار سالب واليمين موجب
+                            ctx.fillStyle = '#38bdf8';
+                            ctx.fillText('δ⁻', cx - cfg.radius - 14, centerY);
+                            ctx.fillStyle = '#fb7185';
+                            ctx.fillText('δ⁺', cx + cfg.radius + 14, centerY);
+                        } else {
+                            // الإلكترونات أُزيحت لليسار أيضاً (نحو المنتصف أو مبتعدة) -> اليسار سالب واليمين موجب
+                            ctx.fillStyle = '#38bdf8';
+                            ctx.fillText('δ⁻', cx - cfg.radius - 14, centerY);
+                            ctx.fillStyle = '#fb7185';
+                            ctx.fillText('δ⁺', cx + cfg.radius + 14, centerY);
+                        }
+                    }
+                }
+
+                // إزاحة الإلكترونات في نفس الاتجاه اللحظي (تتنافر إلكترونات الذرة اليسرى مبتعدة لليسار، فتنجذب إلكترونات الذرة اليمنى نحو القطب الموجب المكشوف لليسار)
+                drawAtom(atom1X, -1);
+                drawAtom(atom2X, -1);
+            }
+
+            // --- رسم محاكاة 2: الماء السائل مقابل الجليد ---
+            const waterC = document.getElementById('waterCanvas');
+            if (waterC && waterC.width > 0) {
+                const ctx = waterC.getContext('2d');
+                const w = waterC.width;
+                const h = waterC.height;
+                ctx.clearRect(0, 0, w, h);
+
+                if (currentWaterState === 'liquid') {
+                    // حالة الماء السائل: جزيئات متقاربة ومتحركة بحرية مع روابط هيدروجينية متغيرة
+                    const cols = Math.max(3, Math.floor(w / 110));
+                    const rows = 3;
+                    const molecules = [];
+
+                    for (let r = 0; r < rows; r++) {
+                        for (let c = 0; c < cols; c++) {
+                            const baseX = (w / (cols + 1)) * (c + 1);
+                            const baseY = (h / (rows + 1)) * (r + 1);
+                            const wobbleX = Math.sin(animTime * 1.5 + r * 2 + c) * 14;
+                            const wobbleY = Math.cos(animTime * 1.3 + c * 2 + r) * 10;
+                            const rot = Math.sin(animTime + r + c) * 0.6;
+                            molecules.push({ x: baseX + wobbleX, y: baseY + wobbleY, rot });
+                        }
+                    }
+
+                    // رسم الروابط الهيدروجينية بين الجزيئات القريبة
+                    ctx.save();
+                    ctx.strokeStyle = '#475569';
+                    ctx.lineWidth = 1.8;
+                    ctx.setLineDash([4, 4]);
+                    for (let i = 0; i < molecules.length; i++) {
+                        for (let j = i + 1; j < molecules.length; j++) {
+                            const dx = molecules[i].x - molecules[j].x;
+                            const dy = molecules[i].y - molecules[j].y;
+                            const d = Math.hypot(dx, dy);
+                            if (d < 125) {
+                                ctx.beginPath();
+                                ctx.moveTo(molecules[i].x, molecules[i].y);
+                                ctx.lineTo(molecules[j].x, molecules[j].y);
+                                ctx.stroke();
+                            }
+                        }
+                    }
+                    ctx.restore();
+
+                    molecules.forEach(m => drawWaterMolecule(ctx, m.x, m.y, m.rot));
+                } else {
+                    // حالة الجليد: شبكة سداسية منتظمة ذات فراغات واسعة في المنتصف
+                    const cx = w / 2;
+                    const cy = h / 2;
+                    const hexRadius = Math.min(w, h) * 0.34;
+                    const hexPoints = [];
+
+                    for (let i = 0; i < 6; i++) {
+                        const angle = (Math.PI / 3) * i - Math.PI / 6;
+                        const vibX = Math.sin(animTime * 3 + i) * 1.5; // اهتزاز طفيف جداً في الحالة الصلبة
+                        const vibY = Math.cos(animTime * 3 + i) * 1.5;
+                        hexPoints.push({
+                            x: cx + Math.cos(angle) * hexRadius + vibX,
+                            y: cy + Math.sin(angle) * hexRadius + vibY,
+                            angle: angle + Math.PI / 2
+                        });
+                    }
+
+                    // رسم الروابط الهيدروجينية على محيط الحلقة السداسية
+                    ctx.save();
+                    ctx.strokeStyle = '#0284c7';
+                    ctx.lineWidth = 2.2;
+                    ctx.setLineDash([5, 5]);
+                    ctx.beginPath();
+                    hexPoints.forEach((p, idx) => {
+                        if (idx === 0) ctx.moveTo(p.x, p.y);
+                        else ctx.lineTo(p.x, p.y);
+                    });
+                    ctx.closePath();
+                    ctx.stroke();
+                    ctx.restore();
+
+                    // توضيح الفراغ الكبير في المنتصف
+                    ctx.fillStyle = 'rgba(2, 132, 199, 0.1)';
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, hexRadius * 0.55, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.fillStyle = '#0369a1';
+                    ctx.font = 'bold 12px Tajawal';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('فراغ بيني واسع', cx, cy - 6);
+                    ctx.font = '11px Tajawal';
+                    ctx.fillText('(بسبب تنافر الشحنات المتماثلة)', cx, cy + 12);
+
+                    hexPoints.forEach(p => drawWaterMolecule(ctx, p.x, p.y, p.angle));
+                }
+            }
+
+            requestAnimationFrame(drawSimulations);
+        }
+
+        function drawWaterMolecule(ctx, x, y, angle) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(angle);
+
+            // روابط تساهمية داخل الجزيء
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(-15, 13);
+            ctx.moveTo(0, 0);
+            ctx.lineTo(15, 13);
+            ctx.stroke();
+
+            // ذرة الأوكسجين (قطب سالب)
+            ctx.beginPath();
+            ctx.arc(0, 0, 12, 0, Math.PI * 2);
+            ctx.fillStyle = '#f43f5e';
+            ctx.fill();
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 10px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('O', 0, 0);
+
+            // ذرتا الهيدروجين (قطب موجب)
+            [[-15, 13], [15, 13]].forEach(([hx, hy]) => {
+                ctx.beginPath();
+                ctx.arc(hx, hy, 7.5, 0, Math.PI * 2);
+                ctx.fillStyle = '#0ea5e9';
+                ctx.fill();
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 8px sans-serif';
+                ctx.fillText('H', hx, hy);
+            });
+
+            ctx.restore();
+        }
+
+        // ==========================================
+        // 3. بطاقات المراجعة التفاعلية (Flashcards)
+        // ==========================================
+        const flashcardsData = [
+            {
+                category: 'vdw',
+                tag: 'قوى فاندرفالز',
+                q: 'ما قوى فاندرفالز؟ وعن ماذا تنتج؟',
+                a: 'هي قوى فيزيائية ضعيفة توجد بين الذرات أو الجزيئات التساهمية غير القطبية، وتنتج عن الحركة العشوائية للإلكترونات وتأثر دوران الإلكترونات في ذرة بدورانها في ذرة مجاورة مما يولد استقطاباً آنياً (لحظياً).'
+            },
+            {
+                category: 'vdw',
+                tag: 'قوى فاندرفالز',
+                q: 'لماذا يكون الفلور غازاً والبروم سائلاً واليود صلباً؟',
+                a: 'لأن قوة فاندرفالز تزداد بازدياد حجم الذرة أو الجزيء وعدد الإلكترونات؛ فالفلور حجم ذرته صغير وإلكتروناته أقل (غاز)، والبروم متوسط (سائل)، واليود حجم ذرته كبير وإلكتروناته أكثر (صلب).'
+            },
+            {
+                category: 'vdw',
+                tag: 'قوى فاندرفالز',
+                q: 'قارن بين ترتيب الطرف السالب والموجب في الجزيء في الحالة الصلبة والحالة السائلة لقوى فاندرفالز.',
+                a: 'في الحالة الصلبة يكون الترتيب منتظماً للطرف السالب والموجب للذرات في الجزيء، بينما في الحالة السائلة يكون الترتيب عشوائياً.'
+            },
+            {
+                category: 'hbond',
+                tag: 'الرابطة الهيدروجينية',
+                q: 'ما الرابطة الهيدروجينية؟ وكيف تُمثل في الجزيء؟',
+                a: 'هي قوة ترابط فيزيائية بين جزيء يحتوي على ذرة هيدروجين وزوج من الإلكترونات غير مرتبط بجزيء آخر أو في نفس الجزيء، وتُمثل بشكل نقاط (....) لتدل على أن الارتباط ضعيف.'
+            },
+            {
+                category: 'hbond',
+                tag: 'الرابطة الهيدروجينية',
+                q: 'اذكر الشروط الواجب توافرها لكي تتكون الرابطة الهيدروجينية؟',
+                a: 'تتكون بين ذرة الهيدروجين (التي تحمل شحنة جزئية موجبة δ⁺) وذرة ذات قدرة عالية على سحب زوج إلكتروني مثل (O, N, F) في جزيء آخر (تحمل شحنة جزئية سالبة δ⁻).'
+            },
+            {
+                category: 'hbond',
+                tag: 'الرابطة الهيدروجينية',
+                q: 'لماذا تظهر شحنة جزئية موجبة على ذرة الهيدروجين وشحنة جزئية سالبة على ذرة الأوكسجين في جزيء الماء؟',
+                a: 'لأن ذرة الأوكسجين لها قدرة عالية على سحب زوج إلكتروني قريباً منها فتظهر عليها شحنة جزئية سالبة (δ⁻)، أما ذرة الهيدروجين التي ابتعد منها الزوج الإلكتروني فتظهر عليها شحنة جزئية موجبة (δ⁺).'
+            },
+            {
+                category: 'water',
+                tag: 'شذوذ الماء',
+                q: 'ما سبب ارتفاع درجة غليان الماء مقارنة بالمواد التي لا تحتوي على رابطة هيدروجينية؟',
+                a: 'بسبب وجود الرابطة الهيدروجينية بين جزيئات الماء (إضافة إلى قوى فاندرفالز)، حيث يلزم التغلب على هذه القوى للفصل بين الجزيئات.'
+            },
+            {
+                category: 'water',
+                tag: 'شذوذ الماء',
+                q: 'لماذا يزداد حجم الماء وتقل كثافته عندما يتجمد؟',
+                a: 'عند انخفاض الحرارة لما تحت الصفر المئوي وبسبب التنافر بين الشحنات المتماثلة، لا تستطيع جزيئات الماء القطبية أن تتقارب جداً، فيقل عدد الجزيئات المترابطة بالروابط الهيدروجينية ويزيد الفراغ فيما بينها فيزداد الحجم.'
+            },
+            {
+                category: 'water',
+                tag: 'التفكير الناقد',
+                q: 'لماذا تكون الرابطة التساهمية ضمن الجزيء أقوى من الرابطة ضمن المركبات التساهمية (بين الجزيئات)؟',
+                a: 'لأن قوى الترابط بين الجزيئات المتجاورة (مثل قوى فاندرفالز والرابطة الهيدروجينية) هي قوى جذب فيزيائية ضعيفة بالمقارنة مع قوى الترابط الكيميائية داخل الجزيء (الرابطة التساهمية).'
+            }
+        ];
+
+        function renderFlashcards(filter = 'all') {
+            const grid = document.getElementById('flashcardsGrid');
+            grid.innerHTML = '';
+
+            const filtered = filter === 'all' ? flashcardsData : flashcardsData.filter(c => c.category === filter);
+
+            filtered.forEach((card, index) => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'perspective-1000 h-64 cursor-pointer group';
+                wrapper.onclick = function() {
+                    this.querySelector('.card-inner').classList.toggle('rotate-y-180');
+                };
+
+                wrapper.innerHTML = `
+                    <div class="card-inner relative w-full h-full transform-style-3d shadow-sm hover:shadow-md rounded-3xl">
+                        <!-- الوجه الأمامي: السؤال -->
+                        <div class="backface-hidden absolute inset-0 bg-white border-2 border-slate-200 group-hover:border-sky-400 rounded-3xl p-6 flex flex-col justify-between">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold px-3 py-1 rounded-full bg-sky-50 text-sky-700 border border-sky-100">${card.tag}</span>
+                                <span class="text-xs text-slate-400 font-bold">بطاقة #${index + 1}</span>
+                            </div>
+                            <h3 class="text-base md:text-lg font-extrabold text-slate-800 text-center leading-relaxed my-auto">
+                                ${card.q}
+                            </h3>
+                            <div class="text-center text-xs font-bold text-sky-600 flex items-center justify-center gap-1">
+                                <span>🔄 انقر لقلب البطاقة وقراءة الإجابة</span>
+                            </div>
+                        </div>
+
+                        <!-- الوجه الخلفي: الإجابة -->
+                        <div class="backface-hidden rotate-y-180 absolute inset-0 bg-gradient-to-br from-sky-800 to-slate-900 text-white rounded-3xl p-6 flex flex-col justify-between">
+                            <div class="flex items-center justify-between border-b border-white/15 pb-2">
+                                <span class="text-xs font-bold text-emerald-300">✅ الإجابة النموذجية</span>
+                                <span class="text-xs text-slate-400">${card.tag}</span>
+                            </div>
+                            <p class="text-sm md:text-base text-slate-100 leading-relaxed my-auto overflow-y-auto">
+                                ${card.a}
+                            </p>
+                            <div class="text-center text-xs text-sky-300">
+                                انقر للعودة إلى السؤال
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(wrapper);
+            });
+        }
+
+        function filterCards(cat) {
+            document.querySelectorAll('.fc-filter').forEach(btn => {
+                btn.classList.remove('bg-slate-800', 'text-white');
+                btn.classList.add('bg-white', 'text-slate-600', 'border', 'border-slate-200');
+            });
+            event.target.classList.remove('bg-white', 'text-slate-600', 'border', 'border-slate-200');
+            event.target.classList.add('bg-slate-800', 'text-white');
+            renderFlashcards(cat);
+        }
+
+        // ==========================================
+        // 4. الأسئلة متدرجة الصعوبة مع تغذية راجعة
+        // ==========================================
+        const practiceQuestions = {
+            easy: [
+                {
+                    q: 'ما نوع قوى الترابط التي توجد بين الذرات أو الجزيئات التساهمية غير القطبية؟',
+                    options: ['الرابطة الأيونية', 'قوى فاندرفالز', 'الرابطة الهيدروجينية', 'الرابطة الفلزية'],
+                    correct: 1,
+                    feedback: 'قوى فاندرفالز هي قوى فيزيائية ضعيفة توجد بين الذرات أو الجزيئات التساهمية غير القطبية مثل (Ne, H₂, I₂). أما الرابطة الهيدروجينية فتتكون بين الجزيئات القطبية التي تحتوي على الهيدروجين وذرات (O, N, F).'
+                },
+                {
+                    q: 'كيف تُُمثل الرابطة الهيدروجينية في الصيغة الجزيئية؟',
+                    options: ['بخط متصل (—)', 'بخطين متوازيين (=)', 'بشكل نقاط (....)', 'بسهم متجه (→)'],
+                    correct: 2,
+                    feedback: 'تُمثل الرابطة الهيدروجينية بشكل نقاط (....) لتدل على أن الارتباط فيزيائي ضعيف بالمقارنة مع الرابطة التساهمية داخل الجزيء.'
+                },
+                {
+                    q: 'أي من العناصر الآتية يكون في الحالة الصلبة في الظروف الاعتيادية بسبب كبر حجم ذرته وزيادة عدد إلكتروناته؟',
+                    options: ['الفلور', 'البروم', 'اليود', 'النيون'],
+                    correct: 2,
+                    feedback: 'اليود صلب لأن حجم ذرته كبير وعدد إلكتروناته أكبر فتكون قوى فاندرفالز بين جزيئاته أقوى، بينما البروم سائل والفلور غاز.'
+                }
+            ],
+            medium: [
+                {
+                    q: 'عن أي شيء ينتج الاستقطاب الآني (الوقتي) في الجزيئات غير القطبية؟',
+                    options: [
+                        'انتقال دائم للإلكترونات من ذرة إلى أخرى',
+                        'الحركة العشوائية للإلكترونات وتأثر دورانها بدوران الإلكترونات في ذرة مجاورة',
+                        'وجود ذرة هيدروجين مرتبطة بالأوكسجين',
+                        'ارتفاع درجة الحرارة إلى ما فوق الغليان'
+                    ],
+                    correct: 1,
+                    feedback: 'ينشأ الاستقطاب الآني نتيجة الحركة العشوائية للإلكترونات وتأثر دوران الإلكترونات في ذرة بدوران الإلكترونات في ذرة مجاورة مما يؤدي لابتعاد الإلكترونات وتولّد أقطاب كهربائية لحظية.'
+                },
+                {
+                    q: 'أي من الجزيئات الآتية لا تتكون بين جزيئاته رابطة هيدروجينية؟',
+                    options: ['جزيء الماء (H₂O)', 'الأمونيا', 'الكحول', 'جزيء الهيدروجين (H₂)'],
+                    correct: 3,
+                    feedback: 'جزيء الهيدروجين (H₂) جزيء تساهمي غير قطبي ترتبط جزيئاته بقوى فاندرفالز فقط، ولا يحتوي على ذرات ذات قدرة عالية على سحب الإلكترونات مثل (O, N, F) اللازمة لتكوين الرابطة الهيدروجينية.'
+                },
+                {
+                    q: 'ماذا يحدث لحجم الماء وكثافته عند انخفاض درجة حرارته إلى ما تحت الصفر المئوي؟',
+                    options: [
+                        'يقل حجمه وتزداد كثافته كباقي السوائل',
+                        'يزداد حجمه وتقل كثافته',
+                        'يبقى حجمه ثابتاً وتزداد كثافته',
+                        'يقل حجمه وتقل كثافته'
+                    ],
+                    correct: 1,
+                    feedback: 'يشذ الماء عن بقية السوائل؛ فعند تجمده يقل عدد الجزيئات المترابطة بالروابط الهيدروجينية ويزيد الفراغ فيما بينها بسبب تنافر الشحنات المتماثلة، مما يؤدي إلى زيادة الحجم ونقصان الكثافة.'
+                }
+            ],
+            hard: [
+                {
+                    q: 'سؤال التفكير الناقد (1): بعض الجزيئات يظهر فيها استقطاب (طرف موجب وطرف سالب) على الرغم من أنها جزيئات غير قطبية، ما تفسير ذلك؟',
+                    options: [
+                        'لأنها تتحول إلى مركبات أيونية عند اقترابها',
+                        'بسبب الحركة العشوائية للإلكترونات وتنافرها مع إلكترونات ذرة مجاورة مما يولد استقطاباً آنياً (لحظياً)',
+                        'لأنها تحتوي على روابط هيدروجينية دائمة',
+                        'بسبب انخفاض عدد إلكتروناتها إلى الصفر'
+                    ],
+                    correct: 1,
+                    feedback: 'رغم أن الجزيئات غير قطبية في الأصل، فإن الحركة العشوائية للإلكترونات وتأثر دورانها بدوران الإلكترونات في ذرة مجاورة يسبب ابتعاد الإلكترونات وتولّد أقطاب كهربائية لحظية (آنية) مؤقتة.'
+                },
+                {
+                    q: 'سؤال التفكير الناقد (2): عند تكوّن الرابطة الهيدروجينية في مركب فلوريد الهيدروجين (HF)، أي ذرة تحمل الشحنة الجزئية السالبة (δ⁻)؟',
+                    options: [
+                        'ذرة الهيدروجين (H) لأنها أصغر حجماً',
+                        'ذرة الفلور (F) لأن لها قدرة عالية على سحب الزوج الإلكتروني قريباً منها',
+                        'كلتا الذرتين تحملان شحنة موجبة',
+                        'لا تتكون شحنات جزئية في مركب HF'
+                    ],
+                    correct: 1,
+                    feedback: 'الفلور (F) من العناصر الثلاثة (O, N, F) ذات القدرة العالية على سحب الزوج الإلكتروني قريباً منها، فتظهر عليه شحنة جزئية سالبة (δ⁻) وتظهر على الهيدروجين شحنة جزئية موجبة (δ⁺).'
+                },
+                {
+                    q: 'ماذا سيحدث للكائنات المائية لو خضع الماء للقواعد العامة للسوائل عند تجمده؟',
+                    options: [
+                        'سيطفو الجليد فوق السطح كالمعتاد',
+                        'ستزداد كثافة الثلج المتكون على السطح ويهبط إلى القاع فتتجمد طبقات الماء تباعاً وتندثر الحياة المائية',
+                        'لن يتجمد الماء أبداً مهما انخفضت الحرارة',
+                        'ستزداد سرعة حركة جزيئات الماء في القاع'
+                    ],
+                    correct: 1,
+                    feedback: 'لو خضع الماء للقواعد العامة لازدادت كثافة الثلج المتكون على السطح وهبط إلى القاع، معرضاً سطح الماء الذي تحته للبرودة فيتجمد هو الآخر ويهبط إلى القاع مما يعرض حياة الكائنات المائية للاندثار.'
+                }
+            ]
+        };
+
+        function selectDifficulty(level) {
+            document.querySelectorAll('.diff-btn').forEach(btn => {
+                btn.classList.remove('bg-emerald-600', 'bg-amber-600', 'bg-rose-600', 'text-white', 'shadow-xs');
+                btn.classList.add('bg-slate-100', 'text-slate-700');
+            });
+
+            const activeBtn = document.getElementById('diff-' + level);
+            activeBtn.classList.remove('bg-slate-100', 'text-slate-700');
+            if (level === 'easy') activeBtn.classList.add('bg-emerald-600', 'text-white', 'shadow-xs');
+            if (level === 'medium') activeBtn.classList.add('bg-amber-600', 'text-white', 'shadow-xs');
+            if (level === 'hard') activeBtn.classList.add('bg-rose-600', 'text-white', 'shadow-xs');
+
+            const container = document.getElementById('practiceContainer');
+            container.innerHTML = '';
+
+            practiceQuestions[level].forEach((item, idx) => {
+                const qCard = document.createElement('div');
+                qCard.className = 'bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4';
+
+                let optionsHtml = '';
+                item.options.forEach((opt, optIdx) => {
+                    optionsHtml += `
+                        <button onclick="checkPracticeAnswer('${level}', ${idx}, ${optIdx}, this)" 
+                                class="opt-btn-${level}-${idx} w-full text-right p-3.5 rounded-2xl border-2 border-slate-200 hover:border-sky-400 hover:bg-sky-50/50 transition font-medium text-sm md:text-base flex items-center gap-3">
+                            <span class="w-7 h-7 rounded-full bg-slate-100 text-slate-700 font-bold text-xs flex items-center justify-center shrink-0">${['أ', 'ب', 'ج', 'د'][optIdx]}</span>
+                            <span>${opt}</span>
+                        </button>
+                    `;
+                });
+
+                qCard.innerHTML = `
+                    <div class="flex items-start gap-3">
+                        <span class="w-8 h-8 rounded-xl bg-slate-800 text-white font-bold text-sm flex items-center justify-center shrink-0 mt-0.5">${idx + 1}</span>
+                        <h3 class="font-bold text-slate-900 text-base md:text-lg leading-snug">${item.q}</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+                        ${optionsHtml}
+                    </div>
+                    <div id="fb-${level}-${idx}" class="hidden p-4 rounded-2xl text-sm leading-relaxed"></div>
+                `;
+                container.appendChild(qCard);
+            });
+        }
+
+        function checkPracticeAnswer(level, qIdx, chosenIdx, btnEl) {
+            const item = practiceQuestions[level][qIdx];
+            const fbBox = document.getElementById(`fb-${level}-${qIdx}`);
+            const allBtns = document.querySelectorAll(`.opt-btn-${level}-${qIdx}`);
+
+            // إعادة ضبط أزرار هذا السؤال
+            allBtns.forEach((b, i) => {
+                b.classList.remove('border-emerald-500', 'bg-emerald-50', 'border-rose-500', 'bg-rose-50');
+                b.classList.add('border-slate-200');
+                if (i === item.correct) {
+                    b.classList.remove('border-slate-200');
+                    b.classList.add('border-emerald-500', 'bg-emerald-50');
+                }
+            });
+
+            fbBox.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-200', 'text-emerald-950', 'bg-rose-50', 'border-rose-200', 'text-rose-950');
+
+            if (chosenIdx === item.correct) {
+                fbBox.classList.add('bg-emerald-50', 'border', 'border-emerald-200', 'text-emerald-950');
+                fbBox.innerHTML = `<strong class="text-emerald-700 block mb-1">✅ إجابة صحيحة! أحسنت.</strong> ${item.feedback}`;
+            } else {
+                btnEl.classList.remove('border-slate-200');
+                btnEl.classList.add('border-rose-500', 'bg-rose-50');
+                fbBox.classList.add('bg-rose-50', 'border', 'border-rose-200', 'text-rose-950');
+                fbBox.innerHTML = `<strong class="text-rose-700 block mb-1">❌ إجابة غير دقيقة — إليك التوضيح العلمي:</strong> ${item.feedback}`;
+            }
+        }
+
+        // ==========================================
+        // 5. الاختبار النهائي والتشخيص التلقائي
+        // ==========================================
+        const examData = [
+            // محور 1: قوى فاندرفالز
+            {
+                topic: 'قوى فاندرفالز',
+                q: 'تُعد قوى فاندرفالز:',
+                options: [
+                    'روابط كيميائية قوية داخل الجزيء',
+                    'قوى فيزيائية ضعيفة توجد بين الذرات أو الجزيئات التساهمية غير القطبية',
+                    'روابط أيونية دائمة بين الفلزات واللافلزات',
+                    'قوى خاصة بجزيئات الماء فقط'
+                ],
+                correct: 1
+            },
+            {
+                topic: 'قوى فاندرفالز',
+                q: 'كيف تتأثر قوة فاندرفالز بحجم الذرة أو الجزيء؟',
+                options: [
+                    'تقل كلما زاد حجم الذرة',
+                    'لا تتأثر بحجم الذرة إطلاقاً',
+                    'تزداد بازدياد حجم الذرة أو الجزيء وزيادة عدد الإلكترونات',
+                    'تنعدم تماماً في العناصر الصلبة مثل اليود'
+                ],
+                correct: 2
+            },
+            {
+                topic: 'قوى فاندرفالز',
+                q: 'يكون ترتيب الطرف السالب والموجب للذرات في الجزيء في الحالة الصلبة لقوى فاندرفالز:',
+                options: ['ترتيباً عشوائياً', 'ترتيباً منتظماً', 'منعدم الأقطاب', 'على شكل حلقات سداسية متباعدة'],
+                correct: 1
+            },
+            // محور 2: الرابطة الهيدروجينية
+            {
+                topic: 'الرابطة الهيدروجينية',
+                q: 'ما نوع الروابط التي تربط ذرتي الهيدروجين مع الأوكسجين داخل جزيء الماء الواحد؟',
+                options: ['روابط هيدروجينية', 'قوى فاندرفالز', 'روابط تساهمية', 'روابط أيونية'],
+                correct: 2
+            },
+            {
+                topic: 'الرابطة الهيدروجينية',
+                q: 'تتكون الرابطة الهيدروجينية بين ذرة الهيدروجين وذرات العناصر ذات القدرة العالية على سحب الإلكترونات مثل:',
+                options: ['( Na , K , Ca )', '( O , N , F )', '( He , Ne , Ar )', '( Fe , Cu , Zn )'],
+                correct: 1
+            },
+            {
+                topic: 'الرابطة الهيدروجينية',
+                q: 'يُعزى سبب ارتفاع درجة غليان وذوبان الماء عن بقية المواد المشابهة إلى:',
+                options: [
+                    'وجود الرابطة الهيدروجينية بين جزيئاته',
+                    'صغر حجم ذرة الأوكسجين',
+                    'كون جزيء الماء غير قطبي',
+                    'انعدام قوى التجاذب بين جزيئاته'
+                ],
+                correct: 0
+            },
+            // محور 3: شذوذ الماء
+            {
+                topic: 'شذوذ الماء والرابطة الهيدروجينية',
+                q: 'عندما يتحول الماء السائل إلى جليد تحت الصفر المئوي فإن:',
+                options: [
+                    'حجمه يقل وكثافته تزداد',
+                    'حجمه يزداد وكثافته تقل',
+                    'حجمه يزداد وكثافته تزداد',
+                    'حجمه يقل وكثافته تقل'
+                ],
+                correct: 1
+            },
+            {
+                topic: 'شذوذ الماء والرابطة الهيدروجينية',
+                q: 'ما السبب المباشر لزيادة الفراغات البينية بين جزيئات الماء عند تجمده؟',
+                options: [
+                    'التنافر الحاصل بين الشحنات المتماثلة مما يمنع تقارب الجزيئات القطبية جداً',
+                    'تحول الروابط التساهمية إلى روابط أيونية',
+                    'زيادة سرعة حركة جزيئات الماء في الحالة الصلبة',
+                    'اختفاء الشحنات الجزئية من ذرات الهيدروجين'
+                ],
+                correct: 0
+            },
+            {
+                topic: 'شذوذ الماء والرابطة الهيدروجينية',
+                q: 'ما الأهمية البيئية لطفو الجليد فوق سطح الماء؟',
+                options: [
+                    'يسرّع من تبخر مياه المحيطات',
+                    'يحمي الكائنات المائية في القاع من التجمد والاندثار',
+                    'يزيد من ملوحة المياه السطحية',
+                    'يمنع ذوبان الأوكسجين في الماء'
+                ],
+                correct: 1
+            }
+        ];
+
+        let userExamAnswers = {};
+
+        function renderExam() {
+            const container = document.getElementById('examQuestionsContainer');
+            container.innerHTML = '';
+            userExamAnswers = {};
+
+            examData.forEach((item, idx) => {
+                const div = document.createElement('div');
+                div.className = 'p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3';
+                div.id = `exam-q-box-${idx}`;
+
+                let optsHtml = '';
+                item.options.forEach((opt, oIdx) => {
+                    optsHtml += `
+                        <label class="flex items-center gap-3 p-3 rounded-xl bg-white border border-slate-200 hover:border-sky-400 cursor-pointer transition">
+                            <input type="radio" name="exam_q_${idx}" value="${oIdx}" onchange="recordExamAnswer(${idx}, ${oIdx})" class="w-4 h-4 accent-sky-600">
+                            <span class="text-sm md:text-base text-slate-800">${opt}</span>
+                        </label>
+                    `;
+                });
+
+                div.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-500">السؤال ${idx + 1} من ${examData.length}</span>
+                        <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-200/70 text-slate-600">${item.topic}</span>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-base md:text-lg">${item.q}</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 pt-1">
+                        ${optsHtml}
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function recordExamAnswer(qIdx, oIdx) {
+            userExamAnswers[qIdx] = oIdx;
+            document.getElementById('examWarning').classList.add('hidden');
+        }
+
+        function submitExam() {
+            if (Object.keys(userExamAnswers).length < examData.length) {
+                document.getElementById('examWarning').classList.remove('hidden');
+                document.getElementById('examWarning').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            let score = 0;
+            const topicStats = {
+                'قوى فاندرفالز': { total: 0, correct: 0 },
+                'الرابطة الهيدروجينية': { total: 0, correct: 0 },
+                'شذوذ الماء والرابطة الهيدروجينية': { total: 0, correct: 0 }
+            };
+
+            examData.forEach((item, idx) => {
+                topicStats[item.topic].total++;
+                const box = document.getElementById(`exam-q-box-${idx}`);
+                const isCorrect = userExamAnswers[idx] === item.correct;
+
+                box.classList.remove('bg-slate-50', 'border-slate-200', 'bg-emerald-50/60', 'border-emerald-400', 'bg-rose-50/60', 'border-rose-400');
+
+                if (isCorrect) {
+                    score++;
+                    topicStats[item.topic].correct++;
+                    box.classList.add('bg-emerald-50/60', 'border-emerald-400');
+                } else {
+                    box.classList.add('bg-rose-50/60', 'border-rose-400');
+                }
+            });
+
+            // عرض لوحة النتيجة
+            const panel = document.getElementById('examResultPanel');
+            panel.classList.remove('hidden');
+            document.getElementById('resultScoreDisplay').textContent = `${score} / ${examData.length}`;
+
+            const gradeTitle = document.getElementById('resultGradeTitle');
+            const summaryText = document.getElementById('resultSummaryText');
+
+            if (score === examData.length) {
+                gradeTitle.textContent = '🌟 ممتاز! إتقان كامل للدرس';
+                summaryText.textContent = 'أجبت على جميع الأسئلة بدقة عالية. أنت مستعد تماماً للانتقال للدرس التالي!';
+            } else if (score >= 6) {
+                gradeTitle.textContent = '👏 جيد جداً! أداء متميز';
+                summaryText.textContent = 'لديك فهم جيد للمفاهيم الأساسية، راجع المواضيع الموضحة أدناه للوصول للعلامة الكاملة.';
+            } else {
+                gradeTitle.textContent = '📚 تحتاج إلى مراجعة إضافية';
+                summaryText.textContent = 'لا تقلق! استخدم المختبر التفاعلي وبطاقات المراجعة لتثبيت المفاهيم ثم أعد المحاولة.';
+            }
+
+            // عرض التشخيص لكل محور
+            const diagContainer = document.getElementById('topicsDiagnosisContainer');
+            diagContainer.innerHTML = '';
+
+            Object.entries(topicStats).forEach(([topicName, stat]) => {
+                const mastered = stat.correct === stat.total;
+                const card = document.createElement('div');
+                card.className = `p-4 rounded-2xl border ${mastered ? 'bg-emerald-950/60 border-emerald-500/40' : 'bg-amber-950/60 border-amber-500/50'}`;
+                card.innerHTML = `
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold ${mastered ? 'text-emerald-400' : 'text-amber-400'}">
+                            ${mastered ? '✅ متقن' : '⚠️ يحتاج مراجعة'}
+                        </span>
+                        <span class="text-xs font-mono text-slate-300">${stat.correct}/${stat.total}</span>
+                    </div>
+                    <h5 class="font-bold text-white text-sm mb-2">${topicName}</h5>
+                    ${mastered 
+                        ? '<p class="text-xs text-slate-300">إجاباتك في هذا المحور صحيحة بالكامل.</p>'
+                        : `<button onclick="switchTab('lessons')" class="mt-1 text-xs font-bold text-amber-300 hover:underline">العودة لشرح هذا المحور ←</button>`
+                    }
+                `;
+                diagContainer.appendChild(card);
+            });
+
+            panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function resetExam() {
+            document.getElementById('examResultPanel').classList.add('hidden');
+            document.getElementById('examWarning').classList.add('hidden');
+            renderExam();
+        }
+
+        // ==========================================
+        // التهيئة عند تحميل الصفحة
+        // ==========================================
+        window.onload = function() {
+            renderFlashcards('all');
+            selectDifficulty('easy');
+            renderExam();
+            resizeCanvases();
+            drawSimulations();
+        };
+    </script>
+</body>
+</html>
